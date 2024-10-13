@@ -1,0 +1,19 @@
+{
+  "name": "devtinder-backend",
+  "version": "1.0.0",
+  "description": "A tinder for devs.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm start",
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [
+    "nodejs",
+    "backend"
+  ],
+  "author": "gopesh3652",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
