@@ -44,7 +44,7 @@ const userSchema = new Schema(
       // },
       validator(value) {
         if (!["male", "female", "others"].includes(value)) {
-          throw new error("gender data is not valid");
+          throw new Error("gender data is not valid");
         }
       },
     },
