@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 
-const dbURI =
-  "mongodb+srv://gopesh:Pj5fWOsqB61A35Bm@practice.k3oza.mongodb.net/devTinder";
+dotenv.config();
 
 const connectDB = async () => {
-  await mongoose.connect(dbURI);
+  await mongoose.connect(process.env.DBURI);
 };
 
 module.exports = connectDB;
