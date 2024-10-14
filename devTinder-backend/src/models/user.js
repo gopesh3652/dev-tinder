@@ -24,7 +24,7 @@ const userSchema = new Schema(
       lowercase: true,
       validator(value) {
         if (!validator.isEmail(value)) {
-          throw new Error("invalid emailn address");
+          throw new Error("invalid emailn address:" + value);
         }
       },
     },
@@ -32,7 +32,7 @@ const userSchema = new Schema(
       type: String,
       validator(value) {
         if (!validator.isStrongPassword(value)) {
-          throw new Error("strong password required");
+          throw new Error("strong password required:" + value);
         }
       },
     },
@@ -46,7 +46,7 @@ const userSchema = new Schema(
       lowercase: true,
       validator(value) {
         if (!["male", "female", "others"].includes(value)) {
-          throw new Error("gender data is not valid");
+          throw new Error("gender data is not valid:" + value);
         }
       },
     },
@@ -55,7 +55,7 @@ const userSchema = new Schema(
       default: "https://avatar.iran.liara.run/public",
       validator(value) {
         if (!validator.isURL(value)) {
-          throw new Error("valid photo url required");
+          throw new Error("valid photo url required:" + value);
         }
       },
     },
