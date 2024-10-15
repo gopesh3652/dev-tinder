@@ -22,15 +22,15 @@ const userSchema = new Schema(
       unique: true,
       trim: true,
       lowercase: true,
-      validator(value) {
+      validate(value) {
         if (!validator.isEmail(value)) {
-          throw new Error("invalid emailn address:" + value);
+          throw new Error("invalid email address:" + value);
         }
       },
     },
     password: {
       type: String,
-      validator(value) {
+      validate(value) {
         if (!validator.isStrongPassword(value)) {
           throw new Error("strong password required:" + value);
         }
@@ -44,7 +44,7 @@ const userSchema = new Schema(
     gender: {
       type: String,
       lowercase: true,
-      validator(value) {
+      validate(value) {
         if (!["male", "female", "others"].includes(value)) {
           throw new Error("gender data is not valid:" + value);
         }
@@ -53,7 +53,7 @@ const userSchema = new Schema(
     photoUrl: {
       type: String,
       default: "https://avatar.iran.liara.run/public",
-      validator(value) {
+      validate(value) {
         if (!validator.isURL(value)) {
           throw new Error("valid photo url required:" + value);
         }
