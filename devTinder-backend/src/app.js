@@ -112,26 +112,6 @@ app.patch("/user/:userId", async (req, res) => {
   }
 });
 
-app.patch("/user", async (req, res) => {
-  const email = req.body.email;
-  const data = req.body;
-
-  try {
-    await User.findOneAndUpdate(
-      {
-        emailId: email,
-      },
-      data,
-      {
-        runValidators: true,
-      }
-    );
-    res.send("user details updated successfully");
-  } catch (err) {
-    res.status(400).send("ERROR:" + err.message);
-  }
-});
-
 connectDB()
   .then(() => {
     console.log("connection to database established successfully....");
