@@ -37,6 +37,7 @@ const userSchema = new Schema(
           throw new Error("strong password required:" + value);
         }
       },
+      required: true,
     },
     age: {
       type: Number,
@@ -46,6 +47,10 @@ const userSchema = new Schema(
     gender: {
       type: String,
       lowercase: true,
+      enum: {
+        values: ["male", "female", "others"],
+        message: "{VALUE} is not a valid gender type.",
+      },
       validate(value) {
         if (!["male", "female", "others"].includes(value)) {
           throw new Error("gender data is not valid:" + value);
@@ -63,16 +68,27 @@ const userSchema = new Schema(
     },
     skills: {
       type: [String],
+      validate(value) {
+        isValidNumberOfSkills = value.length < 11;
+
+        if (!isValidNumberOfSkills) {
+          throw new Error("Only ca add upto 10 skills");
+        }
+      },
     },
     about: {
       type: String,
       default: "Bug can fix me.",
+      minLength: 10,
+      maxLength: 100,
     },
   },
   {
     timestamps: true,
   }
 );
+
+userSchema.index({ firstName: 1, lastName: 1 });
 
 userSchema.methods.getJWT = async function () {
   const { _id } = this._id;

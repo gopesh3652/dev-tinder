@@ -1,6 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const { User } = require("../models/user");
+const User = require("../models/user");
 const { validateSignUpData } = require("../utils/validation.js");
 
 const authRouter = express.Router();
@@ -9,6 +9,15 @@ authRouter.post("/signup", async (req, res) => {
   try {
     validateSignUpData(req);
     const { firstName, lastName, emailId, password } = req.body;
+
+    const isAlreadyExist = await User.findOne({
+      emailId,
+    });
+
+    if (isAlreadyExist) {
+      throw new Error("User already exist");
+    }
+
     const passwordHash = await bcrypt.hash(password, 10);
     const user = new User({
       firstName,
@@ -19,7 +28,7 @@ authRouter.post("/signup", async (req, res) => {
     await user.save();
     res.send("User added successfully.");
   } catch (err) {
-    res.status(400).send("Error saving the user:" + err.message);
+    res.status(400).send("Error saving the user: " + err.message);
   }
 });
 
@@ -47,6 +56,11 @@ authRouter.post("/login", async (req, res) => {
   }
 });
 
-authRouter.post("/logout", (req, res) => {});
+authRouter.post("/logout", (req, res) => {
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+  });
+  res.send("Logged out successfully.");
+});
 
 module.exports = authRouter;
