@@ -2,10 +2,10 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./configs/database");
-const authRouter = require("./router/auth.js");
-const profileRouter = require("./router/profile.js");
-const userRouter = require("./router/user.js");
-const requestRouter = require("./router/request.js");
+const authRouter = require("./router/auth");
+const profileRouter = require("./router/profile");
+const userRouter = require("./router/user");
+const requestRouter = require("./router/request");
 
 const app = express();
 dotenv.config();
@@ -29,5 +29,5 @@ connectDB()
     });
   })
   .catch((err) => {
-    console.error("database connection unsuccessful.", err);
+    console.error("Database connection unsuccessful.", err);
   });

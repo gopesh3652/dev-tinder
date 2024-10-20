@@ -1,6 +1,7 @@
 const express = require("express");
-const { userAuth } = require("../middlewares/auth.js");
-const ConnectionRequest = require("../models/connectionRequest.js");
+const { userAuth } = require("../middlewares/auth");
+const ConnectionRequest = require("../models/connectionRequest");
+const User = require("../models/user");
 
 const requestRouter = express.Router();
 
@@ -20,12 +21,12 @@ requestRouter.post(
         });
       }
 
-      //   const toUser = await ConnectionRequest.findById(toUserId);
-      //   if (!toUser) {
-      //     res.status(400).json({
-      //       messgae: "User not found",
-      //     });
-      //   }
+      const toUser = await User.findById(toUserId);
+      if (!toUser) {
+        return res.status(400).json({
+          messgae: "user does not exist",
+        });
+      }
 
       const existingConnectionRequest = await ConnectionRequest.findOne({
         $or: [
@@ -33,7 +34,6 @@ requestRouter.post(
           { fromUserId: toUserId, toUserId: fromUserId },
         ],
       });
-
       if (existingConnectionRequest) {
         return res.status(400).json({
           message: "Connection request already exist",
@@ -50,6 +50,41 @@ requestRouter.post(
 
       res.json({
         message: "Connection request sent successfully",
+        data,
+      });
+    } catch (err) {
+      res.status(400).send("ERROR: " + err.message);
+    }
+  }
+);
+
+requestRouter.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    try {
+      const loggedInUserId = req.user._id;
+      const { status, requestId } = req.params;
+      const allowedStatusTypes = ["accepted", "rejected"];
+      if (!allowedStatusTypes.includes(status)) {
+        return res.status(400).json({
+          message: "Not a valid status type " + status,
+        });
+      }
+
+      const connectionRequest = await ConnectionRequest.findOne({
+        _id: requestId,
+        toUserId: loggedInUserId,
+        status: "interested",
+      });
+      if (!connectionRequest) {
+        return res.status(400).send("Not a valid request.");
+      }
+
+      connectionRequest.status = status;
+      const data = await connectionRequest.save();
+      return res.status(400).json({
+        messgae: "User has " + status,
         data,
       });
     } catch (err) {

@@ -72,7 +72,7 @@ const userSchema = new Schema(
         isValidNumberOfSkills = value.length < 11;
 
         if (!isValidNumberOfSkills) {
-          throw new Error("Only ca add upto 10 skills");
+          throw new Error("Only can add upto 10 skills");
         }
       },
     },

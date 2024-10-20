@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
-const { validateSignUpData } = require("../utils/validation.js");
+const { validateSignUpData } = require("../utils/validation");
 
 const authRouter = express.Router();
 
@@ -15,7 +15,7 @@ authRouter.post("/signup", async (req, res) => {
     });
 
     if (isAlreadyExist) {
-      throw new Error("User already exist");
+      return res.status(400).json({ message: "user already exist" });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
@@ -26,9 +26,11 @@ authRouter.post("/signup", async (req, res) => {
       password: passwordHash,
     });
     await user.save();
-    res.send("User added successfully.");
+    res.json({
+      message: "User added successfully.",
+    });
   } catch (err) {
-    res.status(400).send("Error saving the user: " + err.message);
+    res.status(400).send("ERROR: " + err.message);
   }
 });
 
@@ -38,7 +40,7 @@ authRouter.post("/login", async (req, res) => {
 
     const user = await User.findOne({ emailId: emailId });
     if (!user) {
-      throw new Error("Invalid credentials");
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const isPasswordValid = await user.validatePassword(password);
@@ -47,9 +49,9 @@ authRouter.post("/login", async (req, res) => {
       const token = await user.getJWT();
       // Add token to cookie and sent back coookie to user
       res.cookie("token", token, { expires: new Date(Date.now() + 360000) });
-      res.send("Login successfully..");
+      res.json({ message: "Login successfully" });
     } else {
-      throw new Error("Invalid credentials");
+      res.status(400).json({ message: "Invalid credentials" });
     }
   } catch (err) {
     res.status(400).send("ERROR:" + err.message);
