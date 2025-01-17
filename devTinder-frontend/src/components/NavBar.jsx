@@ -9,8 +9,6 @@ const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { firstName, photoUrl } = user;
-
   const handleLogout = async () => {
     try {
       await axios.post(
@@ -22,9 +20,11 @@ const NavBar = () => {
       );
 
       dispatch(removeUser());
-      navigate("/login");
+      return navigate("/login");
     } catch (err) {
-      console.error(err);
+      if (err.status === 401) {
+        navigate("/login");
+      }
     }
   };
 
@@ -37,7 +37,9 @@ const NavBar = () => {
       </div>
       {user && (
         <div className="flex-none gap-2">
-          <div className="form-control">Welcome, {firstName || "Guest"}!</div>
+          <div className="form-control">
+            Welcome, {user?.firstName || "Guest"}!
+          </div>
           <div className="dropdown dropdown-end mx-5">
             <div
               tabIndex={0}
@@ -45,7 +47,7 @@ const NavBar = () => {
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-10 rounded-full">
-                <img alt="Profile photo" src={photoUrl || GUEST_IMAGE} />
+                <img alt="Profile photo" src={user?.photoUrl || GUEST_IMAGE} />
               </div>
             </div>
             <ul
