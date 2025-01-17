@@ -1,13 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/constants";
+import { BASE_URL, GUEST_IMAGE } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
 
 const NavBar = () => {
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { firstName, photoUrl } = user;
 
   const handleLogout = async () => {
     try {
@@ -20,7 +22,7 @@ const NavBar = () => {
       );
 
       dispatch(removeUser());
-      return navigate("/login");
+      navigate("/login");
     } catch (err) {
       console.error(err);
     }
@@ -35,7 +37,7 @@ const NavBar = () => {
       </div>
       {user && (
         <div className="flex-none gap-2">
-          <div className="form-control">Welcome, {user?.firstName}!</div>
+          <div className="form-control">Welcome, {firstName || "Guest"}!</div>
           <div className="dropdown dropdown-end mx-5">
             <div
               tabIndex={0}
@@ -43,7 +45,7 @@ const NavBar = () => {
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-10 rounded-full">
-                <img alt="Profile photo" src={user?.photoUrl} />
+                <img alt="Profile photo" src={photoUrl || GUEST_IMAGE} />
               </div>
             </div>
             <ul

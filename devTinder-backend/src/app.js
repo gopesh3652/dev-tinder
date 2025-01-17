@@ -18,8 +18,8 @@ app.use(
 );
 
 dotenv.config();
-// const PORT = process.env.PORT || 3000;
-const PORT = 3002;
+const PORT = process.env.PORT || 3002;
+// const PORT = 3002;
 
 app.use(express.json());
 app.use(cookieParser());

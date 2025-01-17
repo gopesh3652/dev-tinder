@@ -48,7 +48,7 @@ authRouter.post("/login", async (req, res) => {
       // create JWT token
       const token = await user.getJWT();
       // Add token to cookie and sent back coookie to user
-      res.cookie("token", token, { expires: new Date(Date.now() + 360000) });
+      res.cookie("token", token, { expires: new Date(Date.now() + 3600000) });
       res.json({ user });
     } else {
       res.status(400).json({ message: "Invalid credentials" });
