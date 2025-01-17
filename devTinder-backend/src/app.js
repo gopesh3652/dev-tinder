@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./configs/database");
 const authRouter = require("./router/auth");
@@ -8,13 +9,20 @@ const userRouter = require("./router/user");
 const requestRouter = require("./router/request");
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 dotenv.config();
 // const PORT = process.env.PORT || 3000;
 const PORT = 3002;
 
 app.use(express.json());
 app.use(cookieParser());
-
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", userRouter);

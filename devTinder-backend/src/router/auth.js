@@ -49,7 +49,7 @@ authRouter.post("/login", async (req, res) => {
       const token = await user.getJWT();
       // Add token to cookie and sent back coookie to user
       res.cookie("token", token, { expires: new Date(Date.now() + 360000) });
-      res.json({ message: "Login successfully" });
+      res.json({ user });
     } else {
       res.status(400).json({ message: "Invalid credentials" });
     }
