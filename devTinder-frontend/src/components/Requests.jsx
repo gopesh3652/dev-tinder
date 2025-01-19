@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../utils/constants";
-import { addRequests } from "../utils/requestSlice";
+import { addRequests, removeRequest } from "../utils/requestSlice";
 
 const Requests = () => {
   const dispatch = useDispatch();
@@ -17,6 +17,17 @@ const Requests = () => {
     } catch (err) {}
   };
 
+  const reviewRequest = async (status, _id) => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/request/review/" + status + "/" + _id,
+        {},
+        { withCredentials: true }
+      );
+      dispatch(removeRequest(_id));
+    } catch (err) {}
+  };
+
   useEffect(() => {
     fetchRequests();
   }, []);
@@ -25,7 +36,7 @@ const Requests = () => {
 
   if (requests.length === 0) {
     return (
-      <div>
+      <div className="flex justify-center m-10">
         <h1>No request found</h1>
       </div>
     );
@@ -46,7 +57,10 @@ const Requests = () => {
         } = request.fromUserId;
 
         return (
-          <div key={_id} className="flex bg-base-300 p-4 my-4 w-1/2 mx-auto">
+          <div
+            key={_id}
+            className="flex justify-between items-center bg-base-300 p-4 my-4 w-2/3 mx-auto"
+          >
             <div>
               <img
                 alt="profilePhoto"
@@ -60,6 +74,21 @@ const Requests = () => {
               {age && <span>{age}</span>}
               {gender && <span>{gender}</span>}
               {skills && <p>{skills}</p>}
+            </div>
+            <div>
+              <button
+                className="btn btn-active btn-primary mx-2"
+                onClick={() => reviewRequest("rejected", request._id)}
+              >
+                Reject
+              </button>
+              <button
+                className="btn btn-active btn-secondary mx-2"
+                onClick={() => reviewRequest("accepted", request._id)}
+              >
+                {" "}
+                Accept
+              </button>
             </div>
           </div>
         );
