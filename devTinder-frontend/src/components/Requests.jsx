@@ -1,41 +1,39 @@
-import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect } from "react";
 import axios from "axios";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../utils/constants";
-import { addConnection } from "../utils/connectionSlice";
+import { addRequests } from "../utils/requestSlice";
 
-const Connections = () => {
+const Requests = () => {
   const dispatch = useDispatch();
-  const connections = useSelector((store) => store.connection);
+  const requests = useSelector((store) => store.request);
 
-  const fetchConnections = async () => {
+  const fetchRequests = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/user/connection", {
+      const res = await axios.get(BASE_URL + "/user/requests/received", {
         withCredentials: true,
       });
-
-      dispatch(addConnection(res.data.data));
+      dispatch(addRequests(res.data.data));
     } catch (err) {}
   };
 
   useEffect(() => {
-    fetchConnections();
+    fetchRequests();
   }, []);
 
-  if (!connections) return;
+  if (!requests) return;
 
-  if (connections.length === 0) {
+  if (requests.length === 0) {
     return (
       <div>
-        <h1>No connection found</h1>
+        <h1>No request found</h1>
       </div>
     );
   }
-
   return (
     <div className="text-center my-10">
-      <h1 className="text-bold text-3xl text-white my-7">Connections</h1>
-      {connections.map((connection) => {
+      <h1 className="text-bold text-3xl text-white my-7">Requests</h1>
+      {requests.map((request) => {
         const {
           _id,
           firstName,
@@ -45,7 +43,7 @@ const Connections = () => {
           skills,
           age,
           gender,
-        } = connection;
+        } = request.fromUserId;
 
         return (
           <div key={_id} className="flex bg-base-300 p-4 my-4 w-1/2 mx-auto">
@@ -70,4 +68,4 @@ const Connections = () => {
   );
 };
 
-export default Connections;
+export default Requests;
