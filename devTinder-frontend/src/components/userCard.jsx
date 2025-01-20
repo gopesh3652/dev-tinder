@@ -9,16 +9,18 @@ const UserCard = ({ user }) => {
     user;
   const dispatch = useDispatch();
 
-  const handleSendrequest = async (status, _id) => {
+  const handleSendrequest = async (status, userId) => {
     try {
-      const res = await axios.post(
-        BASE_URL + "/request/send/" + status + "/" + _id,
+      await axios.post(
+        BASE_URL + "/request/send/" + status + "/" + userId,
         {},
         { withCredentials: true }
       );
 
-      dispatch(removeUserFromFeed(_id));
-    } catch (err) {}
+      dispatch(removeUserFromFeed(userId));
+    } catch (err) {
+      console.error("Error in handleSendrequest:", err);
+    }
   };
 
   return (
@@ -28,9 +30,9 @@ const UserCard = ({ user }) => {
       </figure>
       <div className="card-body">
         <h2 className="card-title">{firstName + " " + lastName}</h2>
-        {age && <span>{age}</span>}
-        {gender && <span>{gender}</span>}
-        <p>{about}</p>
+        {age && <span>Age: {age}</span>}
+        {gender && <span>Gender: {gender}</span>}
+        <p>{about || "No information provided."}</p>
         <p>{skills || "Add skills"}</p>
         <div className="card-actions flex justify-center gap-6">
           <button

@@ -83,7 +83,7 @@ requestRouter.post(
 
       connectionRequest.status = status;
       const data = await connectionRequest.save();
-      return res.status(400).json({
+      return res.json({
         messgae: "User has " + status,
         data,
       });
